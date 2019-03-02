@@ -14,55 +14,7 @@ using namespace std;
 #define INFINITY 1e8
 #endif
 
-// basic 3D vector
-Vector3::Vector3(){
-	x = 0, y = 0, z = 0;
-}
-Vector3::Vector3(float xx){
-	x = xx, y = xx, z = xx;
-}
-Vector3::Vector3(float xx, float yy, float zz){
-	x = xx, y = yy, z = zz;
-}
-
-Ray::Ray(const Vector3 &a, const Vector3&b){
-	ori = a, dir = b;
-}
-Sphere::Sphere(		
-	const Vector3 &c,
-	const float &r,
-	const Vector3 &sc,
-	const float &ref,
-	const float &trans,
-	const Vector3 &ec)
-{
-	center = c, radius = r, radius2 = r*r;
-	surfaceCol = sc, emissionCol = ec, transp = trans, refl = ref;
-}
-
-// calculate intersection btn ray and sphere
-// three cases for line-sphere intersection:
-// 1. no intersection, return false,
-// 2. one point intersection (aka tangent)
-// 3. two point intersection (there are 3 subcases)
-//    case A: t0 and t1 are positive, which means ray is facing the sphere and intersecting
-//    case B: one of them is positive and the other negative, meaning ray is shooting from the inside
-//    case C: both of them are negative, which means the ray is pointing in the wrong direction,
-//            so intersection's actually impossible
-bool Sphere::intersect(const Ray &r, float &t0, float &t1) const {
-	Vector3 l = center - r.origin();
-	Vector3 raydir = r.direction();
-	float tca = l.dot(raydir);
-	if (tca < 0) return false;
-	float d2 = l.dot(l) - tca * tca;
-	if (d2 > radius2) return false;
-	float thc = sqrt(radius2 - d2);
-	t0 = tca - thc;
-	t1 = tca + thc;
-	return true;
-}
-
-// ray tracer portion
+// ray tracer
 #define MAX_RAY_DEPTH 5
 float mix(const float &a, const float &b, const float &mix){
 	return b * mix + a * (1- mix);

@@ -10,48 +10,19 @@ public:
 	Vector3(float xx, float yy, float zz);
 	// vector operators
 
-	Vector3 operator * (const float &f) const {
-		return Vector3(x * f, y * f, z * f);
-	}
-	Vector3 operator * (const Vector3 &v) const {
-		return Vector3(x * v.x, y * v.y, z * v.z);
-	}
-	float dot(const Vector3 &v) const {
-		return x * v.x + y * v.y + z * v.z;
-	}
-	Vector3 operator + (const Vector3 &v) const {
-		return Vector3(x + v.x, y + v.y, z + v.z);
-	}
-	Vector3 operator - (const Vector3 &v) const {
-		return Vector3(x - v.x, y - v.y, z - v.z);
-	}
-	Vector3 operator - () const {
-		return Vector3(-x, -y, -z);
-	}
+	Vector3 operator * (const float &f) const;
+	Vector3 operator * (const Vector3 &v) const;
+	float dot(const Vector3 &v) const;
+	Vector3 operator + (const Vector3 &v) const;
+	Vector3 operator - (const Vector3 &v) const;
+	Vector3 operator - () const;
 	// if change self, don't have const.
-	Vector3 & operator += (const Vector3 &v) {
-		x += v.x, y += v.y, z += v.z;
-		return *this;
-	}
-	Vector3 & operator *= (const Vector3 &v) {
-		x *= v.x, y *= v.y, z *= v.z;
-		return *this;
-	}
+	Vector3 & operator += (const Vector3 &v);
+	Vector3 & operator *= (const Vector3 &v);
 	// 2norm, normalization, etc.
-	float length2() const {
-		return x*x + y*y + z*z;
-	}
-	float length() const {
-		return sqrt(length2());
-	}
-	Vector3 & normalize() {
-		float nor2 = length2();
-		if (nor2 > 0) {
-			float inv = 1 / sqrt(nor2);
-			x *= inv, y *= inv, z *= inv;
-		}
-		return *this;
-	}
+	float length2() const;
+	float length() const;
+	Vector3 & normalize();
 
 	friend std::ostream & operator << (std::ostream &os, const Vector3 &v){
 		os << "[" << v.x << " " << v.y << " " << v.z << "]";
@@ -63,15 +34,9 @@ class Ray {
 public:
 	Vector3 ori, dir;
 	Ray(const Vector3 &a, const Vector3 &b);
-	Vector3 origin() const {
-		return ori;
-	}
-	Vector3 direction() const {
-		return dir;
-	}
-	Vector3 point_at_parameter(float t) const {
-		return ori + dir * t;
-	}
+	Vector3 origin() const;
+	Vector3 direction() const;
+	Vector3 point_at_parameter(float t) const;
 };
 // basic object template
 class Object {
@@ -91,7 +56,6 @@ public:
 	float radius, radius2; // radius and squared radius
 	float transp, refl; // transparency and reflective properties
 
-	// assume 
 	Sphere(
 		const Vector3 &c,
 		const float &r,
@@ -114,3 +78,13 @@ public:
 };
 
 // add cylinders and squares
+// class Box : public Object{
+// 	Vector3 origin;
+// 	Vector3 bound;
+// 	// create cube with center at origin (0, 0, 0) and and side length s 
+// 	Box(float &s);
+// 	// rectanglular prism with center at origin and dimensions v
+// 	Box(Vector3 &v);
+// 	// rectangular prism
+// 	Box(Vector3 &ori, Vector3 &end);
+// }
