@@ -12,5 +12,12 @@ To compile and run:
 
 `./raytracer`
 
-Future work involve the ability to render other simple shapes (cubes, cones, cylinders), the possibility to extend to transformed
-shapes.
+Current functionality:
+
+Rendering shadows, reflective and refractive objects
+
+Rendering spherical light sources
+
+Objects renderable: Spheres, Axis Alighed Boxes (partial), 2D planes
+
+Future work: fully functional boxes, cylinders, cones, transformed objects
