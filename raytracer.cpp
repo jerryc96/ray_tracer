@@ -66,8 +66,6 @@ Vector3 trace(
 	// find closest intersection of ray and spheres in the scene
 	for (unsigned i = 0; i < shapes.size(); ++i){
 		float t0 = INFINITY, t1 = INFINITY;
-		if (i == 4);
-		   //cout << "Intersect Box " << i << ": " << shapes[i] -> intersect(ray, t0, t1) << "\n";
 		if (shapes[i]->intersect(ray, t0, t1)){
 			if (t0 < 0) t0 = t1;
 			if (t0 < tnear) {
@@ -87,7 +85,6 @@ Vector3 trace(
     //cout << "Intersect Position: " << intersectPos << "\n";
 	intersectNormal = shape->nhit(intersectPos); // normal at intersection point
 	//cout << "Intersect Normal: " << intersectNormal << "\n";
-	intersectNormal.normalize();
 	float bias = 1e-4;
 
 	// if normal and the view direction aren't opposite, flip the normal direction. 
@@ -96,6 +93,7 @@ Vector3 trace(
 		intersectNormal = -intersectNormal;
 		inside = true;
 	}
+	intersectNormal.normalize();
 	// if transparency > 0 or reflection > 0, then means transparent/reflective object, 
 	// need to recursively raytrace to calc those components.
 	if ((shape->transp > 0 || shape->refl > 0) && depth < MAX_RAY_DEPTH){
@@ -142,7 +140,7 @@ void render(const std::vector<objPtr> &shapes, const std::vector<Sphere>&lights)
 	unsigned width = 640, height = 480;
 	Vector3 *image = new Vector3[width * height],  *pixel = image;
 	float invWidth = 1/ float(width), invHeight = 1/ float(height);
-	float fov = 30;
+	float fov = 40;
 	float asp = width / float(height);
 	float angle = tan(M_PI * 0.5 * fov/180.);
 	// trace rays
@@ -172,11 +170,13 @@ int main(int argc, char **argv) {
 	srand48(13);
 	std::vector<objPtr> shapes;
 	std::vector<Sphere> lights;
-	shapes.emplace_back(std::make_shared<Sphere>(Sphere(Vector3(0.0, -10004, -300), 10000, Vector3(0.20, 0.20, 0.20), 0, 0.0)));
-    shapes.emplace_back(std::make_shared<Sphere>(Sphere(Vector3(0.0, 25, -200), 20, Vector3(1.00, 0.32, 0.36), 1, 0.5)));
-    shapes.emplace_back(std::make_shared<Sphere>(Sphere(Vector3(5.0, -2, -18), 4, Vector3(0.90, 0.76, 0.46), 1, 0.0)));
-    shapes.emplace_back(std::make_shared<Sphere>(Sphere(Vector3(5.0, 0, -25), 3, Vector3(0.65, 0.77, 0.97), 1, 0.0)));
-    shapes.emplace_back(std::make_shared<Box>(Box(Vector3(-5, -3, -50), Vector3(-2, 2, -20), Vector3(0.8, 1, 1), 1, 1)));
+	//shapes.emplace_back(std::make_shared<Sphere>(Sphere(Vector3(0.0, -10004, -300), 10000, Vector3(0.20, 0.20, 0.20), 0, 0.0)));
+    shapes.emplace_back(std::make_shared<Sphere>(Sphere(Vector3(-20, 25, -200), 20, Vector3(1.00, 0.32, 0.36), 1, 0.5)));
+    shapes.emplace_back(std::make_shared<Sphere>(Sphere(Vector3(-5, -1, -18), 4, Vector3(0.90, 0.5, 0.6), 0.5, 0.1)));
+    shapes.emplace_back(std::make_shared<Sphere>(Sphere(Vector3(5.0, 0, -25), 3, Vector3(0.65, 0.77, 0.97), 0.01, 0.0)));
+    //shapes.emplace_back(std::make_shared<Box>(Box(Vector3(-5, -1, -50), Vector3(-3, 1, -10), Vector3(0.7, 0.7, 0.7), 0.2, 0)));
+    shapes.emplace_back(std::make_shared<Plane>(Plane(Vector3(0, 1, 0), Vector3(0, -5, 0), Vector3(0.6, 0.6, 0.6), 0.1, 0.2)));
+    shapes.emplace_back(std::make_shared<Plane>(Plane(Vector3(0, 0, 1), Vector3(0, 0, -300), Vector3(0.9, 0.9, 0.9), 0.5, 0.2)));
     // light
     // spheres.emplace_back(new Box(Vector3(0, 0, -20), Vector3(1, 1, -19), Vector3(1, 1, 1), 0, 0.0));
     // light

@@ -78,3 +78,24 @@ public:
 	Vector3 nhit (Vector3 Phit) const;
 };
 std::ostream & operator << (std::ostream &os, const Box &b);
+
+// 2D plane. Plane is infinite
+class Plane : public Object {
+public:
+	Vector3 normal;
+	Vector3 point;
+	// create a plane, defined by the normal and point
+	Plane(const Vector3 &norm,
+		  const Vector3 &pt,
+		  const Vector3 &sc,
+		  const float &ref = 0,
+		  const float &trans = 0,
+		  const Vector3 &ec = 0);
+
+	Vector3 get_normal() const;
+	Vector3 get_dimensions() const;
+	bool intersect(const Ray &r, float &t0, float &t1) const;
+	Vector3 nhit(Vector3 Phit) const;
+};
+
+// cone

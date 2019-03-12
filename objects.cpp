@@ -7,7 +7,7 @@
 #include <cassert>
 #include "objects.h"
 using namespace std;
-#define EPSI 0.001
+#define EPSI 1.00001
 
 Ray::Ray(const Vector3 &a, const Vector3&b){
 	ori = a, dir = b;
@@ -38,6 +38,18 @@ Box::Box(
 	const Vector3 &ec)
 {
 	bounds[0] = ori, bounds[1] = end;
+	surfaceCol = sc, emissionCol = ec, transp = trans, refl = ref;
+}
+
+Plane::Plane(
+	const Vector3 &norm,
+	const Vector3 &pt,
+	const Vector3 &sc,
+	const float &ref,
+	const float &trans,
+	const Vector3 &ec)
+{
+	normal = norm, point = pt;
 	surfaceCol = sc, emissionCol = ec, transp = trans, refl = ref;
 }
 
@@ -145,29 +157,36 @@ bool Box::intersect(const Ray &r, float &t0, float &t1) const {
 }
 // Calculate intersection normal with the box
 Vector3 Box::nhit(Vector3 Phit) const {
-	Vector3 intersectNormal;
-	if (abs(Phit.xval() - bounds[0].xval()) < EPSI) {
-		intersectNormal = Vector3(-1, 0, 0);
-	}
-	else if (abs(Phit.xval() - bounds[1].xval()) < EPSI){
-		intersectNormal = Vector3(1, 0, 0);
-	}
-	else if (abs(Phit.yval() - bounds[0].yval()) < EPSI){
-		intersectNormal = Vector3(0, -1, 0);
-	}
-	else if (abs(Phit.yval() - bounds[1].yval()) < EPSI){
-		intersectNormal = Vector3(0, 1, 0);
-	}
-	else if (abs(Phit.zval() - bounds[0].zval()) < EPSI){
-		intersectNormal = Vector3(0, 0, -1);
-	}
-	else if (abs(Phit.zval() - bounds[1].zval()) < EPSI){
-		intersectNormal = Vector3(0, 0, 1);
-	}
+	Vector3 intersectNormal, c, p, d;
+	c = (bounds[0] + bounds[1]) * 0.5;
+	p = Phit - c;
+	d = (bounds[0] - bounds[1]) * 0.5;
+	float bias = EPSI;
+	intersectNormal = Vector3(float(int(p.xval()/abs(d.xval()) * bias)),
+							  float(int(p.yval()/abs(d.yval()) * bias)),
+							  float(int(p.zval()/abs(d.zval()) * bias))
+							 );
 	return intersectNormal;
 }
 
 std::ostream & operator << (std::ostream &os, const Box &b){
 	os << "Origin, Dimensions: " << b.get_origin() << ", " << b.get_dimensions() << "\n";
 	return os;
+}
+
+bool Plane::intersect(const Ray &r, float &t0, float &t1) const {
+	float numer, denom, t;
+	numer = normal.dot(point - r.origin());
+	denom = normal.dot(r.direction());
+	if (denom == 0) return false;
+	t = numer/denom;
+	if (t < 0) return false;
+	else {
+		t0 = t;
+		return true;
+	}
+}
+
+Vector3 Plane::nhit(Vector3 Phit) const {
+	return normal;
 }
