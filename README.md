@@ -6,7 +6,7 @@ The ray tracer can render simple spheres with refractive and reflective surfaces
 
 See image.ppm for an example of the rendered image.
 
-![Sample image](https://raw.githubusercontent.com/jerryc96/ray_tracer/master/image.ppm)
+![Sample image](image.ppm)
 
 To compile and run:
 
