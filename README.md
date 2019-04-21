@@ -2,7 +2,7 @@
 
 Simple raytracer in C++.
 
-The ray tracer can render simple spheres with refractive and reflective surfaces.
+The ray tracer can render simple 3D objects.
 
 See image.ppm for an example of the rendered image.
 
